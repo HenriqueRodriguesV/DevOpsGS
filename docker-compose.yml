@@ -1,0 +1,53 @@
+services:
+  orbit-api:
+    build:
+      context: ./orbit-api
+      dockerfile: Dockerfile
+    container_name: orbit-api-rm562917
+    restart: unless-stopped
+    environment:
+      PORT: 8080
+      DB_URL: jdbc:h2:tcp://orbit-db:9092/./orbitdb
+      DB_USER: sa
+      DB_PASSWORD: ""
+      DB_DRIVER: org.h2.Driver
+      JWT_SECRET: orbit-secret-key-devops
+      SPRING_PROFILES_ACTIVE: docker
+    ports:
+      - "8080:8080"
+    depends_on:
+      orbit-db:
+        condition: service_healthy
+    networks:
+      - orbit-net
+
+  orbit-db:
+    build:
+      context: ./h2-db
+      dockerfile: Dockerfile
+    container_name: orbit-db-rm562917
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "java -cp /h2/h2.jar org.h2.tools.Shell -url jdbc:h2:tcp://localhost:9092/./orbitdb -user sa -password '' -sql 'select 1' >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    environment:
+      H2_VERSION: 2.2.224
+      H2_TCP_PORT: 9092
+      H2_WEB_PORT: 8082
+    volumes:
+      - orbit-h2-data:/data
+    ports:
+      - "9092:9092"
+      - "8082:8082"
+    networks:
+      - orbit-net
+
+volumes:
+  orbit-h2-data:
+
+networks:
+  orbit-net:
+    driver: bridge
