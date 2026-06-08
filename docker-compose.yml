@@ -11,7 +11,7 @@ services:
       DB_USER: sa
       DB_PASSWORD: ""
       DB_DRIVER: org.h2.Driver
-      JWT_SECRET: orbit-secret-key-devops
+      JWT_SECRET: orbit-devops-gs2026-jwt-secret-key-rm562917-fiap-space
       SPRING_PROFILES_ACTIVE: docker
     ports:
       - "8080:8080"
