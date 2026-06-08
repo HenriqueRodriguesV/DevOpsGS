@@ -4,12 +4,11 @@
 
 A ORBIT API é uma aplicação Java Spring Boot voltada ao contexto da Global Solution 2026/1, conectando exploração espacial, dados e soluções aplicáveis a problemas reais na Terra.
 
+Fluxo: o usuário acessa a aplicação via navegador/Swagger/Postman, que chega a uma VM Linux na nuvem (Azure). Na VM, o Docker Compose orquestra dois containers na mesma rede `orbit-net`: o container da aplicação `orbit-api-rm562917` (Spring Boot, porta 8080) e o container do banco `orbit-db-rm562917` (H2 em modo servidor TCP, portas 9092/8082). A persistência é garantida pelo volume nomeado `orbit-h2-data`, montado em `/data` no container do banco.
+
 ## Arquitetura macro
 
-Inserir aqui a imagem `arquitetura/arquitetura-macro.png`.
-
-Fluxo:
-Usuário/Postman/Swagger -> Container orbit-api -> Network Docker orbit-net -> Container orbit-db H2 -> Volume orbit-h2-data.
+![Arquitetura Macro](arquitetura/arquitetura-macro.png)
 
 ## Tecnologias utilizadas
 
@@ -126,7 +125,7 @@ curl -X PUT http://localhost:8080/api/pessoas/1 -H "Authorization: Bearer $TOKEN
 curl -X DELETE -H "Authorization: Bearer $TOKEN" http://localhost:8080/api/pessoas/1
 ```
 
-Outros recursos: `/api/missoes`, `/api/veiculos`, `/api/recursos`, `/api/pontos-de-apoio` (ver Swagger).
+Outros recursos: `/api/missoes`, `/api/veiculos`, `/api/recursos`, `/api/pontos-apoio` (ver Swagger).
 
 ## Como executar em nuvem (Azure)
 
@@ -185,7 +184,7 @@ Remover os recursos da nuvem (evitar custos): `bash scripts/azure-delete-resourc
 - [x] CRUD completo persistindo em tabelas relacionadas (9 tabelas)
 - [x] SELECT direto no container do banco
 - [x] README com how-to, execução local e em nuvem
-- [ ] Imagem arquitetura/arquitetura-macro.png (desenhar no Draw.io)
+- [x] Imagem arquitetura/arquitetura-macro.png incluída no README
 - [ ] Vídeo demonstrativo em nuvem
 - [ ] PDF final (capa, RM 562917, nomes, link GitHub, link YouTube)
 
